@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Battery Notification</string>
+    <string name="key_notification_enable">key_notification_enable</string>
+    <string name="desc_fahrenheit">Use Fahrenheit</string>
+    <string name="desc_notification">Enable the Notification</string>
+    <string name="key_use_fahrenheit">key_use_fahrenheit</string>
+    <string name="key_show_time_remaining">key_show_time_remaining</string>
+    <string name="desc_time_remaining">Show Time Remaining On Battery/Charging</string>
+    <string name="desc_time_remaining_summary">For Rooted Devices Only</string>
+    <string name="desc_notification_summary">Create a persistent notification</string>
+</resources>

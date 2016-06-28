@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:checked="false"
+        android:key="@string/key_notification_enable"
+        android:summary="@string/desc_notification_summary"
+        android:title="@string/desc_notification" />
+    <SwitchPreference
+
+        android:checked="false"
+        android:key="@string/key_use_fahrenheit"
+        android:title="@string/desc_fahrenheit" />
+    <SwitchPreference
+
+        android:checked="false"
+        android:key="@string/key_show_time_remaining"
+        android:summary="@string/desc_time_remaining_summary"
+        android:title="@string/desc_time_remaining" />
+</PreferenceScreen>
