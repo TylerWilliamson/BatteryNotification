@@ -1,6 +1,5 @@
 package com.ominous.batterynotification;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -13,9 +12,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
@@ -82,15 +84,12 @@ public class SettingsActivity extends Activity {
             timeRemainingPreference.setDefaultValue(preferences.getBoolean(PREFERENCE_TIME_REMAINING, false));
         }
 
-
-        @SuppressLint("CommitPrefEdits")
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             boolean enabled = (Boolean) newValue;
             switch (preference.getTitleRes()) {
                 case R.string.desc_fahrenheit:
-                    preferences.edit().putBoolean(PREFERENCE_FAHRENHEIT, enabled).commit();
-                    NotificationUtil.updateBatteryNotification(this.getActivity(), NotificationUtil.savedIntent);
+                    preferences.edit().putBoolean(PREFERENCE_FAHRENHEIT, enabled).apply();
                     break;
                 case R.string.desc_notification:
                     if (enabled)
@@ -103,21 +102,32 @@ public class SettingsActivity extends Activity {
                     break;
                 case R.string.desc_time_remaining:
                     if (enabled && this.getActivity().getPackageManager()
-                            .checkPermission(BATTERY_STATS, this.getActivity().getPackageName()) != PackageManager.PERMISSION_GRANTED) {
+                            .checkPermission(BATTERY_STATS, this.getActivity().getPackageName()) != PackageManager.PERMISSION_GRANTED)
                         try {
                             executeSuCommand(PM_GRANT + this.getActivity().getPackageName() + SPACE + BATTERY_STATS);
-                            preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, true).commit();
+
+                            if (this.getActivity().getPackageManager()
+                                    .checkPermission(BATTERY_STATS, this.getActivity().getPackageName()) != PackageManager.PERMISSION_GRANTED)
+                                throw new Exception();
+
+                            preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, true).apply();
                         } catch (Exception e) {
                             Toast.makeText(this.getActivity(), PERMISSION_FAILURE_MESSAGE, Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                            preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, false).commit();
-                            timeRemainingPreference.setChecked(false);
+                            Log.e(this.getActivity().getResources().getString(R.string.app_name), PERMISSION_FAILURE_MESSAGE);
+
+                            preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, false).apply();
+
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    timeRemainingPreference.setChecked(false);
+                                }
+                            }, 1000);
                         }
-                    } else {
-                        preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, enabled).commit();
-                        NotificationUtil.updateBatteryNotification(this.getActivity(), NotificationUtil.savedIntent);
-                    }
+                    else
+                        preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, enabled).apply();
             }
+            NotificationUtil.updateBatteryNotification(this.getActivity(), NotificationUtil.savedIntent);
             return true;
         }
     }
