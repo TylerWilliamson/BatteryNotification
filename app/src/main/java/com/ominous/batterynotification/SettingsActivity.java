@@ -105,7 +105,7 @@ public class SettingsActivity extends Activity {
                     if (enabled && this.getActivity().getPackageManager()
                             .checkPermission(BATTERY_STATS, this.getActivity().getPackageName()) != PackageManager.PERMISSION_GRANTED) {
                         try {
-                            executeSuCommand(PM_GRANT + this.getActivity().getPackageName() + SPACE + PERMISSION_FAILURE_MESSAGE);
+                            executeSuCommand(PM_GRANT + this.getActivity().getPackageName() + SPACE + BATTERY_STATS);
                             preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, true).commit();
                         } catch (Exception e) {
                             Toast.makeText(this.getActivity(), PERMISSION_FAILURE_MESSAGE, Toast.LENGTH_SHORT).show();
@@ -117,8 +117,6 @@ public class SettingsActivity extends Activity {
                         preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, enabled).commit();
                         NotificationUtil.updateBatteryNotification(this.getActivity(), NotificationUtil.savedIntent);
                     }
-                default:
-                    break;
             }
             return true;
         }
