@@ -126,8 +126,11 @@ public class SettingsActivity extends Activity {
                         }
                     else
                         preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, enabled).apply();
-            }
-            NotificationUtil.updateBatteryNotification(this.getActivity(), NotificationUtil.savedIntent);
+                    }
+
+            if (NotificationUtil.savedIntent != null)
+                NotificationUtil.updateBatteryNotification(this.getActivity(), NotificationUtil.savedIntent);
+
             return true;
         }
     }
