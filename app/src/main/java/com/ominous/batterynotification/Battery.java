@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
 import android.os.BatteryStats;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.ServiceManager;
 import android.os.SystemClock;
@@ -41,7 +42,8 @@ class Battery {
         batteryHealthMap.append(BatteryManager.BATTERY_HEALTH_UNKNOWN, UNKNOWN);
         batteryHealthMap.append(BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE, FAILED);
 
-        batteryManager = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
+        if (Build.VERSION.SDK_INT >= 21)
+            batteryManager = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
     }
 
     public static String getTemperature(Intent intent, boolean useFahrenheit) {
@@ -57,13 +59,16 @@ class Battery {
     }
 
     public static String getAmp() {
-        int batteryCurrent = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW);
+        if (Build.VERSION.SDK_INT >= 21) {
+            int batteryCurrent = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW);
 
-        return (Math.abs(batteryCurrent) > 1000000) ?
-                divideAndRound(batteryCurrent / 10000) + A :
-                ((Math.abs(batteryCurrent) > 1000) ?
-                        divideAndRound(batteryCurrent / 10) + mA :
-                        batteryCurrent + uA);
+            return (Math.abs(batteryCurrent) > 1000000) ?
+                    divideAndRound(batteryCurrent / 10000) + A :
+                    ((Math.abs(batteryCurrent) > 1000) ?
+                            divideAndRound(batteryCurrent / 10) + mA :
+                            batteryCurrent + uA);
+        } else
+            return EMPTY;
     }
 
     public static String getState(Intent intent) {
@@ -78,24 +83,25 @@ class Battery {
     }
 
     public static String getTimeRemaining(Intent intent) {
-        try {
-            byte[] data = IBatteryStats.Stub.asInterface(
-                    ServiceManager.getService(BatteryStats.SERVICE_NAME)).getStatistics();
-            Parcel parcel = Parcel.obtain();
-            parcel.unmarshall(data, 0, data.length);
-            parcel.setDataPosition(0);
-            BatteryStatsImpl batteryStats = com.android.internal.os.BatteryStatsImpl.CREATOR
-                    .createFromParcel(parcel);
-            parcel.recycle();
+        if (Build.VERSION.SDK_INT >= 19)
+            try {
+                byte[] data = IBatteryStats.Stub.asInterface(
+                        ServiceManager.getService(BatteryStats.SERVICE_NAME)).getStatistics();
+                Parcel parcel = Parcel.obtain();
+                parcel.unmarshall(data, 0, data.length);
+                parcel.setDataPosition(0);
+                BatteryStatsImpl batteryStats = com.android.internal.os.BatteryStatsImpl.CREATOR
+                        .createFromParcel(parcel);
+                parcel.recycle();
 
-            if (intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1) == BatteryManager.BATTERY_STATUS_DISCHARGING) {
-                return computeTimeString(batteryStats.computeBatteryTimeRemaining(SystemClock.elapsedRealtime() * 1000) / 1000000);
-            } else if (intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1) == BatteryManager.BATTERY_STATUS_CHARGING) {
-                return computeTimeString(batteryStats.computeChargeTimeRemaining(SystemClock.elapsedRealtime() * 1000) / 1000000);
+                if (intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1) == BatteryManager.BATTERY_STATUS_DISCHARGING) {
+                    return computeTimeString(batteryStats.computeBatteryTimeRemaining(SystemClock.elapsedRealtime() * 1000) / 1000000);
+                } else if (intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1) == BatteryManager.BATTERY_STATUS_CHARGING) {
+                    return computeTimeString(batteryStats.computeChargeTimeRemaining(SystemClock.elapsedRealtime() * 1000) / 1000000);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return EMPTY;
     }
 

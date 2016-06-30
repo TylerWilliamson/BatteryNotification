@@ -52,19 +52,20 @@ public class SettingsActivity extends Activity {
 
             Bitmap launcherIcon = null;
             try {
-                BitmapDrawable bd = ((BitmapDrawable) this.getResources().getDrawable(R.mipmap.ic_launcher, null));
+                BitmapDrawable bd = (Build.VERSION.SDK_INT > 21) ?
+                        ((BitmapDrawable) this.getResources().getDrawable(R.mipmap.ic_launcher, null)) :
+                        ((BitmapDrawable) this.getResources().getDrawable(R.mipmap.ic_launcher));
                 launcherIcon = (bd != null) ? bd.getBitmap() : null;
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            this.getActivity().setTaskDescription(
-                    new ActivityManager.TaskDescription(
-                            this.getString(R.string.app_name),
-                            launcherIcon,
-                            (Build.VERSION.SDK_INT > 21) ?
-                                    this.getResources().getColor(R.color.colorPrimary, null) :
-                                    this.getResources().getColor(R.color.colorPrimary)));
+            if (Build.VERSION.SDK_INT > 21)
+                this.getActivity().setTaskDescription(
+                        new ActivityManager.TaskDescription(
+                                this.getString(R.string.app_name),
+                                launcherIcon,
+                                this.getResources().getColor(R.color.colorPrimary, null)));
 
 
             preferences = this.getActivity().getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
@@ -126,7 +127,7 @@ public class SettingsActivity extends Activity {
                         }
                     else
                         preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, enabled).apply();
-                    }
+            }
 
             if (NotificationUtil.savedIntent != null)
                 NotificationUtil.updateBatteryNotification(this.getActivity(), NotificationUtil.savedIntent);
