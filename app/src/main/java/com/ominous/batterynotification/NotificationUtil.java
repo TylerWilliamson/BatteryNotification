@@ -22,13 +22,11 @@ class NotificationUtil {
 
         savedIntent = intent;
 
-        int level = Battery.getBatteryLevel(intent);
-
         String timeRemaining = ((sharedPreferences.getBoolean(SettingsActivity.PREFERENCE_TIME_REMAINING, false)) ? Battery.getTimeRemaining(intent) : EMPTY);
         if (!timeRemaining.equals(EMPTY))
             timeRemaining = SPACER + timeRemaining;
 
-
+        int level = Battery.getBatteryLevel(intent);
         Notification.Builder notificationBuilder = new Notification.Builder(context)
                 .setContentIntent(batterySummaryPendingIntent)
                 .setPriority(Notification.PRIORITY_MIN)

@@ -50,24 +50,6 @@ public class SettingsActivity extends Activity {
             super.onCreate(savedInstanceState);
             this.addPreferencesFromResource(R.xml.settings);
 
-            Bitmap launcherIcon = null;
-            try {
-                BitmapDrawable bd = (Build.VERSION.SDK_INT > 21) ?
-                        ((BitmapDrawable) this.getResources().getDrawable(R.mipmap.ic_launcher, null)) :
-                        ((BitmapDrawable) this.getResources().getDrawable(R.mipmap.ic_launcher));
-                launcherIcon = (bd != null) ? bd.getBitmap() : null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (Build.VERSION.SDK_INT > 21)
-                this.getActivity().setTaskDescription(
-                        new ActivityManager.TaskDescription(
-                                this.getString(R.string.app_name),
-                                launcherIcon,
-                                this.getResources().getColor(R.color.colorPrimary, null)));
-
-
             preferences = this.getActivity().getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
             if (preferences.getBoolean(PREFERENCE_NOTIFICATION, false))
                 this.getActivity().startService(new Intent(this.getActivity(), BatteryService.class));
@@ -83,6 +65,27 @@ public class SettingsActivity extends Activity {
             timeRemainingPreference = (SwitchPreference) findPreference(getResources().getString(R.string.key_show_time_remaining));
             timeRemainingPreference.setOnPreferenceChangeListener(this);
             timeRemainingPreference.setDefaultValue(preferences.getBoolean(PREFERENCE_TIME_REMAINING, false));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                try {
+                    BitmapDrawable bd = ((BitmapDrawable) this.getResources().getDrawable(R.mipmap.ic_launcher, null));
+                    Bitmap launcherIcon = (bd != null) ? bd.getBitmap() : null;
+
+                    this.getActivity().setTaskDescription(
+                            new ActivityManager.TaskDescription(
+                                    this.getString(R.string.app_name),
+                                    launcherIcon,
+                                    (Build.VERSION.SDK_INT >= 23) ?
+                                            this.getResources().getColor(R.color.colorPrimary, null) :
+                                            this.getResources().getColor(R.color.colorPrimary)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                timeRemainingPreference.setEnabled(false);
+                timeRemainingPreference.setDefaultValue(false);
+                preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING,false).apply();
+            }
         }
 
         @Override

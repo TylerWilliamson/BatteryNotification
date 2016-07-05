@@ -83,7 +83,7 @@ class Battery {
     }
 
     public static String getTimeRemaining(Intent intent) {
-        if (Build.VERSION.SDK_INT >= 19)
+        if (Build.VERSION.SDK_INT >= 21)
             try {
                 byte[] data = IBatteryStats.Stub.asInterface(
                         ServiceManager.getService(BatteryStats.SERVICE_NAME)).getStatistics();
