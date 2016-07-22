@@ -84,7 +84,7 @@ public class SettingsActivity extends Activity {
             } else {
                 timeRemainingPreference.setEnabled(false);
                 timeRemainingPreference.setDefaultValue(false);
-                preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING,false).apply();
+                preferences.edit().putBoolean(PREFERENCE_TIME_REMAINING, false).apply();
             }
         }
 
@@ -96,9 +96,10 @@ public class SettingsActivity extends Activity {
                     preferences.edit().putBoolean(PREFERENCE_FAHRENHEIT, enabled).apply();
                     break;
                 case R.string.desc_notification:
-                    if (enabled)
+                    if (enabled) {
+                        Toast.makeText(this.getActivity(), BatteryService.STARTING_MESSAGE, Toast.LENGTH_SHORT).show();
                         this.getActivity().startService(new Intent(this.getActivity(), BatteryService.class));
-                    else {
+                    } else {
                         this.getActivity().stopService(new Intent(this.getActivity(), BatteryService.class));
                         ((NotificationManager) this.getActivity().getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
                     }

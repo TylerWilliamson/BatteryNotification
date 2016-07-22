@@ -8,13 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.widget.Toast;
 
 public class BatteryService extends Service {
     public final static IntentFilter UPDATE_FILTER = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     private PendingIntent pendingIntent;
     private AlarmManager alarmManager;
-    private final static String STARTING_MESSAGE = "Starting Battery Notification...";
+    final static String STARTING_MESSAGE = "Starting Battery Notification...";
 
     private final BroadcastReceiver bbr = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -25,7 +24,6 @@ public class BatteryService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, STARTING_MESSAGE, Toast.LENGTH_LONG).show();
         pendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(BatteryBroadcastReceiver.UPDATE_ACTION), 0);
         alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
