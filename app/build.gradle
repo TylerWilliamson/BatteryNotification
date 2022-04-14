@@ -1,19 +1,60 @@
-apply plugin: 'com.android.application'
+/*
+ *     Copyright 2016 - 2022 Tyler Williamson
+ *
+ *     This file is part of BatteryNotification.
+ *
+ *     BatteryNotification is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     BatteryNotification is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+apply plugin: "com.android.application"
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.0"
-
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.ominous.batterynotification"
         minSdkVersion 17
-
-        targetSdkVersion 24
-        versionCode 7
-        versionName "1.1.1"
+        targetSdkVersion 31
+        versionCode 10
+        versionName "1.4.0"
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-DEBUG"
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+    compileOptions {
+        compileOptions {
+            targetCompatibility 1.8
+            sourceCompatibility 1.8
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('../debug.keystore')
+        }
     }
 }
 
 dependencies {
-    provided fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.activity:activity:1.4.0"
+    implementation "androidx.preference:preference:1.2.0"
+    implementation "androidx.work:work-runtime:2.7.1"
+    //We're going deeper
+    implementation "com.github.tiann:FreeReflection:9bc252d"
 }

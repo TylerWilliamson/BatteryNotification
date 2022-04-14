@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~     Copyright 2016 - 2022 Tyler Williamson
+  ~
+  ~     This file is part of BatteryNotification.
+  ~
+  ~     BatteryNotification is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     BatteryNotification is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="160"
+    android:viewportHeight="160">
+    <group
+        android:translateX="26"
+        android:translateY="26">
+
+        <path
+            android:fillColor="#FFF"
+            android:pathData="M47,24V19a2,2 0 0,1 2,-2H58a2,2 0 0,1 2,2V24z" />
+
+        <path
+            android:fillColor="#FFF"
+            android:pathData="M33,27a5,5 0 0,1 5,-5H69a5,5 0 0,1 5,5V80a5,5 0 0,1 -5,5H38a5,5 0 0,1 -5,-5V27M36,30V50a3,3 0 0,0 3,3H68a3,3 0 0,0 3,-3V28a3,3 0 0,0 -3,-3H39a3,3 0 0,0 -3,3z" />
+
+    </group>
+</vector>

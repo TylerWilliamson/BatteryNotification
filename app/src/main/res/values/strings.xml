@@ -1,11 +1,91 @@
+<!--
+  ~     Copyright 2016 - 2022 Tyler Williamson
+  ~
+  ~     This file is part of BatteryNotification.
+  ~
+  ~     BatteryNotification is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     BatteryNotification is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
 <resources>
     <string name="app_name">Battery Notification</string>
-    <string name="key_notification_enable">key_notification_enable</string>
+    <string name="char_c">C</string>
+    <string name="char_d">"d "</string>
+    <string name="char_f">F</string>
+    <string name="char_h">"h "</string>
+    <string name="char_m_left">m left</string>
+
     <string name="desc_fahrenheit">Use Fahrenheit</string>
     <string name="desc_notification">Enable the Notification</string>
-    <string name="key_use_fahrenheit">key_use_fahrenheit</string>
-    <string name="key_show_time_remaining">key_show_time_remaining</string>
+    <string name="desc_notification_summary">Create a persistent notification</string>
     <string name="desc_time_remaining">Show Time Remaining On Battery/Charging</string>
     <string name="desc_time_remaining_summary">For Rooted Devices On Android 5.0+</string>
-    <string name="desc_notification_summary">Create a persistent notification</string>
+    <string name="desc_open_notification_settings">Open Device Notification Settings</string>
+    <string name="desc_open_notification_settings_summary">For Devices On Android 5.0+</string>
+
+    <string name="health_cold">Cold</string>
+    <string name="health_dead">Dead</string>
+    <string name="health_healthy">Healthy</string>
+    <string name="health_overheating">Overheating</string>
+    <string name="health_overvoltage">Over Voltage</string>
+
+    <string name="message_permission_failure">Failed to grant permission</string>
+    <string name="message_root_failure">Failed to execute root command</string>
+    <string name="message_starting">Starting Battery Notification&#8230;</string>
+    <string name="message_permission_granted">Permission Granted</string>
+    <string name="message_unknown_error">Unknown Error</string>
+    <string name="message_received_strange_intent">Received strange intent: %1$s</string>
+    <string name="preference_fahrenheit">FahrenheitEnabled</string>
+    <string name="preference_filename">Settings</string>
+    <string name="preference_notification">NotificationEnabled</string>
+    <string name="preference_immediate">UpdateImmediately</string>
+    <string name="preference_timeremaining">TimeRemainingEnabled</string>
+    <string name="preference_notification_settings">key_open_notification_settings</string>
+
+    <string name="state_charging">Charging</string>
+    <string name="state_usb_charging">USB Charging</string>
+    <string name="state_wireless_charging">Wireless Charging</string>
+
+    <string name="status_discharging">Discharging</string>
+    <string name="status_full">Full</string>
+    <string name="status_not_charging">Not Charging</string>
+    <string name="status_unknown">Unknown</string>
+
+    <string name="intent_update_action">com.ominous.batterynotification.UPDATE_ACTION</string>
+    <string name="intent_notification_settings">android.settings.CHANNEL_NOTIFICATION_SETTINGS</string>
+
+    <string name="formatted_temperature">%1$s°%2$s</string>
+    <string name="formatted_ua">%1$d.0μA</string>
+    <string name="formatted_a">%1$sA</string>
+    <string name="formatted_ma">%1$smA</string>
+    <string name="formatted_v">%1$sV</string>
+    <string name="formatted_command">pm grant %1$s %2$s</string>
+    <string name="formatted_title">"%1$d%% • %2$s"</string>
+    <string name="formatted_title_time_remaining">"%1$d%% • %2$s • %3$s"</string>
+    <string name="formatted_contenttext">"%1$s%2$s • %3$s"</string>
+    <string name="formatted_contenttext_amp">"%1$s • %2$s • %3$s"</string>
+
+    <string name="chanel_description">Ongoing notification to show battery information</string>
+
+    <string name="extra_app_package">app_package</string>
+    <string name="extra_app_uid">app_uid</string>
+
+    <string name="dialog_timeremaining_title">Failed to Give Permission Automatically</string>
+    <string name="dialog_adb_title">ADB Instructions</string>
+    <string name="dialog_adb_content">Please run the following command to give the required permission:</string>
+    <string name="dialog_button_close">Close</string>
+    <string name="dialog_button_tryagain">Try Again</string>
+    <string name="dialog_button_notification_settings">Notification Settings</string>
+    <string name="dialog_timeremaining_content">BatteryNotification could not obtain the BATTERY_STATS permission automatically. If your device is rooted, please press \"Try Again\" and allow the root command. Otherwise, you can use ADB to give this permission.</string>
+    <string name="dialog_foreground_content">Unfortunately, the battery notification is no longer minimized. You can open the notification settings and make it minimized.</string>
 </resources>

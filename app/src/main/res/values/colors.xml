@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~     Copyright 2016 - 2022 Tyler Williamson
+  ~
+  ~     This file is part of BatteryNotification.
+  ~
+  ~     BatteryNotification is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     BatteryNotification is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
 <resources>
+    <color name="colorPrimaryDark">#00665C</color>
     <color name="colorPrimary">#00897B</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
+    <color name="yellow">#FFEB3B</color>
+
+    <color name="color_white_emphasis">#DEFFFFFF</color>
 </resources>

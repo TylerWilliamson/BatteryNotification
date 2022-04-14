@@ -1,20 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<!--
+  ~     Copyright 2016 - 2022 Tyler Williamson
+  ~
+  ~     This file is part of BatteryNotification.
+  ~
+  ~     BatteryNotification is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     BatteryNotification is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreference
         android:checked="false"
-        android:key="@string/key_notification_enable"
+        android:key="@string/preference_notification"
         android:summary="@string/desc_notification_summary"
-        android:title="@string/desc_notification" />
+        android:title="@string/desc_notification"
+        app:iconSpaceReserved="false" />
     <SwitchPreference
-
         android:checked="false"
-        android:key="@string/key_use_fahrenheit"
-        android:title="@string/desc_fahrenheit" />
+        android:key="@string/preference_fahrenheit"
+        android:title="@string/desc_fahrenheit"
+        app:iconSpaceReserved="false" />
     <SwitchPreference
-
         android:checked="false"
-        android:key="@string/key_show_time_remaining"
+        android:key="@string/preference_immediate"
+        android:title="Update the notification immediately"
+        android:summary="Requires a background service"
+        app:iconSpaceReserved="false" />
+    <SwitchPreference
+        android:checked="false"
+        android:key="@string/preference_timeremaining"
         android:summary="@string/desc_time_remaining_summary"
-        android:title="@string/desc_time_remaining" />
+        android:title="@string/desc_time_remaining"
+        app:iconSpaceReserved="false" />
+    <Preference
+        android:key="@string/preference_notification_settings"
+        android:summary="@string/desc_open_notification_settings_summary"
+        android:title="@string/desc_open_notification_settings"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>
