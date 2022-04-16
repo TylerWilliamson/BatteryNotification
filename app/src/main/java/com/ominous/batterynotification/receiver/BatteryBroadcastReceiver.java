@@ -26,7 +26,7 @@ import android.util.Log;
 
 import com.ominous.batterynotification.R;
 import com.ominous.batterynotification.service.BatteryService;
-import com.ominous.batterynotification.work.BatteryWorkManager;
+import com.ominous.batterynotification.util.NotificationUtils;
 
 public class BatteryBroadcastReceiver extends BroadcastReceiver {
     private final static String TAG = "BatBroadcastReceiver";
@@ -36,17 +36,16 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
         if (intent.getAction() != null) {
             if (context.getString(R.string.intent_update_action).equals(intent.getAction())
                     && isNotificationEnabled(context)) {
-                Log.v(TAG,"Received Notification Update Intent");
+                Log.v(TAG, "Received Notification Update Intent");
 
                 if (context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE)
                         .getBoolean(context.getString(R.string.preference_immediate), false)) {
                     context.startService(new Intent(context, BatteryService.class));
                 } else {
-                    //Update the notification from background
-                    BatteryWorkManager.enqueueBackgroundJob(context);
+                    NotificationUtils.updateBatteryNotification(context);
                 }
             } else {
-                Log.e(TAG, context.getString(R.string.message_received_strange_intent,intent.getAction()));
+                Log.e(TAG, context.getString(R.string.message_received_strange_intent, intent.getAction()));
             }
         }
     }

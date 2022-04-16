@@ -54,7 +54,6 @@ android {
 dependencies {
     implementation "androidx.activity:activity:1.4.0"
     implementation "androidx.preference:preference:1.2.0"
-    implementation "androidx.work:work-runtime:2.7.1"
     //We're going deeper
     implementation "com.github.tiann:FreeReflection:9bc252d"
 }

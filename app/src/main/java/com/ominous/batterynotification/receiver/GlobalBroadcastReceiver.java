@@ -40,11 +40,11 @@ public class GlobalBroadcastReceiver extends BroadcastReceiver {
                     break;
                 case Intent.ACTION_POWER_CONNECTED:
                 case Intent.ACTION_POWER_DISCONNECTED:
-                    Log.v(TAG,"Updating Battery Notification in background");
+                    Log.v(TAG, "Updating Battery Notification in background");
                     NotificationUtils.updateBatteryNotification(context);
                     break;
                 default:
-                    Log.e(TAG, context.getString(R.string.message_received_strange_intent,intent.getAction()));
+                    Log.e(TAG, context.getString(R.string.message_received_strange_intent, intent.getAction()));
             }
         }
     }

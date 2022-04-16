@@ -191,8 +191,8 @@ public class SettingsActivity extends AppCompatActivity {
                     intent.putExtra(Settings.EXTRA_APP_PACKAGE, activity.getPackageName())
                             .putExtra(Settings.EXTRA_CHANNEL_ID, activity.getString(R.string.app_name));
                 } else {
-                    intent.putExtra(getString(R.string.extra_app_package), activity.getPackageName())
-                            .putExtra(getString(R.string.extra_app_uid), activity.getApplicationInfo().uid);
+                    intent.putExtra("app_package", activity.getPackageName())
+                            .putExtra("app_uid", activity.getApplicationInfo().uid);
                 }
 
                 startActivity(intent);

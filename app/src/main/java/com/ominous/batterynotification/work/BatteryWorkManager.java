@@ -30,8 +30,6 @@ import com.ominous.batterynotification.receiver.BatteryBroadcastReceiver;
 import com.ominous.batterynotification.util.NotificationUtils;
 
 import androidx.core.content.ContextCompat;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 public class BatteryWorkManager {
     private final static int ONE_MIN = 60000, REQUEST_CODE = 123;
@@ -66,13 +64,5 @@ public class BatteryWorkManager {
                 new Intent(context, BatteryBroadcastReceiver.class)
                         .setAction(context.getString(R.string.intent_update_action)),
                 NotificationUtils.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
-    }
-
-    public static void enqueueBackgroundJob(Context context) {
-        WorkManager.getInstance(context).enqueue(
-                new OneTimeWorkRequest.Builder(BatteryWorker.class)
-                        .addTag("batteryWork")
-                        .build()
-        );
     }
 }

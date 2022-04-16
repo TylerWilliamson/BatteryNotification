@@ -42,9 +42,9 @@ import androidx.core.content.ContextCompat;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 public class NotificationUtils {
-    private static final IntentFilter batteryIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     public final static int NOTIFICATION_ID = 12345;
     public final static int FLAG_IMMUTABLE = Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0;
+    private static final IntentFilter batteryIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 
     public static Notification makeBatteryNotification(Context context, Intent intent) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE);
@@ -111,7 +111,7 @@ public class NotificationUtils {
     }
 
     public static void updateBatteryNotification(Context context) {
-        updateBatteryNotification(context,context.registerReceiver(null, batteryIntentFilter));
+        updateBatteryNotification(context, context.registerReceiver(null, batteryIntentFilter));
     }
 
     public static void updateBatteryNotification(Context context, Intent intent) {

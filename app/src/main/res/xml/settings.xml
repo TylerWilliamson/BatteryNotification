@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~     Copyright 2016 - 2022 Tyler Williamson
   ~
   ~     This file is part of BatteryNotification.
@@ -35,8 +34,8 @@
     <SwitchPreference
         android:checked="false"
         android:key="@string/preference_immediate"
-        android:title="Update the notification immediately"
         android:summary="Requires a background service"
+        android:title="Update the notification immediately"
         app:iconSpaceReserved="false" />
     <SwitchPreference
         android:checked="false"

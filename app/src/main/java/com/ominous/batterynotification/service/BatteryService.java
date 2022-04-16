@@ -32,12 +32,11 @@ import com.ominous.batterynotification.work.BatteryWorkManager;
 
 //Updates immediately, or after a min
 public class BatteryService extends Service {
-    private final static String TAG = "BatteryService";
     public final static IntentFilter UPDATE_FILTER = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-
+    private final static String TAG = "BatteryService";
     private final BroadcastReceiver bbr = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
-            Log.v(TAG,"Updating Battery Notification in foreground");
+            Log.v(TAG, "Updating Battery Notification in foreground");
             NotificationUtils.updateBatteryNotification(context, intent);
             setAlarm();
         }
@@ -47,7 +46,7 @@ public class BatteryService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Log.d(TAG,"Starting Foreground Service");
+        Log.d(TAG, "Starting Foreground Service");
     }
 
     @Override

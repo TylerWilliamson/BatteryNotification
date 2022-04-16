@@ -77,9 +77,6 @@
 
     <string name="chanel_description">Ongoing notification to show battery information</string>
 
-    <string name="extra_app_package">app_package</string>
-    <string name="extra_app_uid">app_uid</string>
-
     <string name="dialog_timeremaining_title">Failed to Give Permission Automatically</string>
     <string name="dialog_adb_title">ADB Instructions</string>
     <string name="dialog_adb_content">Please run the following command to give the required permission:</string>
