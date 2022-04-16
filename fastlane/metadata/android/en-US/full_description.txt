@@ -1,9 +1,9 @@
 Always Free (No IAPs or Ads) and Always Open Source
 
 Persistent Notification Includes:
-<ul><li>Battery Level (Including Color Indicator for Android 5.0+)</li><li>Battery Temperature (in Fahrenheit or Celcius)</li><li>Charging State</li><li>Battery Health</li><li>Charging/Discharging Amperage (for Android 5.0+)</li><li>(Root/ADB Only for Android 5.0+) Time Remaining Until Fully Charged or Discharged</li></ul>
+<ul><li>Battery Level (Including Color Indicator for Android 5.0+)</li><li>Battery Temperature (in Fahrenheit or Celcius)</li><li>Charging State</li><li>Battery Health</li><li>Charging/Discharging Amperage (for Android 5.0+)</li><li>Time Remaining Until Fully Charged or Discharged (Root/ADB Only for Android 5.0+)</li></ul>
 
 Required Permissions
 <ul><li><b>android.permission.RECEIVE_BOOT_COMPLETED</b> - Used to restart the notification after rebooting the device</li></ul>
 Optional Permissions
-<ul><li><b>android.permission.ACCESS_SUPERUSER</b> - Used to give the app the android.permission.BATTERY_STATS permission</li><li><b>android.permission.BATTERY_STATS</b> - Used to access the BatteryStats object to get the time remaining until fully charged or discharged</li><li><b>android.permission.ACCESS_WIFI_STATE</b> - Used to access the BatteryStats object to get the time remaining until fully charged or discharged</li></ul>
+<ul><li><b>android.permission.ACCESS_SUPERUSER</b> - Used to give the app the android.permission.BATTERY_STATS permission</li><li><b>android.permission.BATTERY_STATS</b> - Used to access the BatteryStats object to get the time remaining until fully charged or discharged</li><li><b>android.permission.FOREGROUND_SERVICE</b> - Used to keep a service in the foreground to instantly update the notification if the battery information changes</li></ul>
