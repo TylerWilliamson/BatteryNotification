@@ -11,9 +11,9 @@ RepoType: git
 Repo: https://github.com/TylerWilliamson/BatteryNotification
 
 Builds:
-  - versionName: 1.4.0
-    versionCode: 10
-    commit: 0ac6d185282ff40d9a48d35e6c314c400a1a47c0
+  - versionName: 1.4.1
+    versionCode: 11
+    commit: f67d7eb4ea4288eb95b6deeffb32e4e96f5b95b1
     subdir: app
     sudo:
       - apt-get update || apt-get update
@@ -24,5 +24,5 @@ Builds:
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.4.0
-CurrentVersionCode: 10
+CurrentVersion: 1.4.1
+CurrentVersionCode: 11
