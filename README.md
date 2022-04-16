@@ -31,7 +31,7 @@ Optional Permissions:
 * **android.permission.ACCESS_SUPERUSER** - Used to give the app the android.permission.BATTERY_STATS permission
 * **android.permission.BATTERY_STATS** - Used to access the BatteryStats object to get the time remaining until fully charged or discharged
 * **android.permission.ACCESS_WIFI_STATE** - Used to access the BatteryStats object to get the time remaining until fully charged or discharged
-
+* **android.permission.FOREGROUND_SERVICE** - Used to keep a service in the foreground to instantly update the notification if the battery information changes
 
 License
 ---

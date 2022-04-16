@@ -2,22 +2,27 @@ Categories:
   - System
 License: GPL-3.0-or-later
 AuthorName: TylerWilliamson
-AutoName: BatteryNotification
-
 SourceCode: https://github.com/TylerWilliamson/BatteryNotification
 IssueTracker: https://github.com/TylerWilliamson/BatteryNotification/issues/
+
+AutoName: Battery Notification
 
 RepoType: git
 Repo: https://github.com/TylerWilliamson/BatteryNotification
 
 Builds:
-  - versionName: '1.4.0'
+  - versionName: 1.4.0
     versionCode: 10
-    commit: 
+    commit: 0ac6d185282ff40d9a48d35e6c314c400a1a47c0
+    subdir: app
+    sudo:
+      - apt-get update || apt-get update
+      - apt-get install -y openjdk-11-jdk-headless
+      - update-alternatives --auto java
     gradle:
       - yes
 
-AutoUpdateMode: Version %v
+AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: 1.4.0
 CurrentVersionCode: 10

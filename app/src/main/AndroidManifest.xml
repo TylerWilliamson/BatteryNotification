@@ -35,9 +35,6 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <!-- OH GOD WHY -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
     <!-- We only need this for API 28+ -->
     <uses-sdk tools:overrideLibrary="me.weishu.freereflection" />
 
