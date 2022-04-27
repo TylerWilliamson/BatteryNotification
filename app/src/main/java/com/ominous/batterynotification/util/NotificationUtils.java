@@ -32,7 +32,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
-import android.widget.Toast;
 
 import com.ominous.batterynotification.R;
 import com.ominous.batterynotification.service.BatteryService;
@@ -99,15 +98,9 @@ public class NotificationUtils {
     }
 
     public static void startBatteryNotification(Context context) {
-        Toast.makeText(context, context.getString(R.string.message_starting), Toast.LENGTH_SHORT).show();
         updateBatteryNotification(context);
 
-        if (context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE)
-                .getBoolean(context.getString(R.string.preference_immediate), false)) {
-            context.startService(new Intent(context, BatteryService.class));
-        } else {
-            BatteryWorkManager.setRepeatingAlarm(context);
-        }
+        BatteryWorkManager.setRepeatingAlarm(context);
     }
 
     public static void updateBatteryNotification(Context context) {

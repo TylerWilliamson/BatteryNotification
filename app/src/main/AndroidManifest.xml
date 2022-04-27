@@ -42,8 +42,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
-        tools:targetApi="s">
+        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
         <activity
             android:name=".activity.SettingsActivity"
             android:exported="true">
@@ -54,13 +53,13 @@
         </activity>
         <service
             android:name=".service.BatteryService"
-            android:exported="true"
+            android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver
-            android:name=".receiver.GlobalBroadcastReceiver"
+            android:name=".receiver.BatteryBroadcastReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -69,11 +68,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".receiver.BatteryBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="com.ominous.batterynotification.UPDATE_ACTION" />

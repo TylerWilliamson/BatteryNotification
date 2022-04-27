@@ -28,7 +28,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.ominous.batterynotification.util.NotificationUtils;
-import com.ominous.batterynotification.work.BatteryWorkManager;
 
 //Updates immediately, or after a min
 public class BatteryService extends Service {
@@ -38,7 +37,6 @@ public class BatteryService extends Service {
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG, "Updating Battery Notification in foreground");
             NotificationUtils.updateBatteryNotification(context, intent);
-            setAlarm();
         }
     };
 
@@ -55,12 +53,7 @@ public class BatteryService extends Service {
                 NotificationUtils.makeBatteryNotification(this,
                         this.registerReceiver(bbr, UPDATE_FILTER)));
 
-        setAlarm();
         return Service.START_STICKY;
-    }
-
-    private void setAlarm() {
-        BatteryWorkManager.setRepeatingAlarm(this);
     }
 
     public IBinder onBind(Intent intent) {

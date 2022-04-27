@@ -1,0 +1,2 @@
+* Bugfix: "Open Device Notification Settings" Crash
+* Bugfix: Notification disappearing or not updating

@@ -61,9 +61,6 @@
     <string name="status_not_charging">Not Charging</string>
     <string name="status_unknown">Unknown</string>
 
-    <string name="intent_update_action">com.ominous.batterynotification.UPDATE_ACTION</string>
-    <string name="intent_notification_settings">android.settings.CHANNEL_NOTIFICATION_SETTINGS</string>
-
     <string name="formatted_temperature">%1$s°%2$s</string>
     <string name="formatted_ua">%1$d.0μA</string>
     <string name="formatted_a">%1$sA</string>
