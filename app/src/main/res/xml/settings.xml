@@ -23,29 +23,29 @@
     <SwitchPreference
         android:checked="false"
         android:key="@string/preference_notification"
-        android:summary="@string/desc_notification_summary"
-        android:title="@string/desc_notification"
+        android:summary="@string/preference_notification_desc_summary"
+        android:title="@string/preference_notification_desc"
         app:iconSpaceReserved="false" />
     <SwitchPreference
         android:checked="false"
         android:key="@string/preference_fahrenheit"
-        android:title="@string/desc_fahrenheit"
+        android:title="@string/preference_fahrenheit_desc"
         app:iconSpaceReserved="false" />
     <SwitchPreference
         android:checked="false"
         android:key="@string/preference_immediate"
-        android:summary="Requires a background service"
-        android:title="Update the notification immediately"
+        android:summary="@string/preference_immediate_desc_summary"
+        android:title="@string/preference_immediate_desc"
         app:iconSpaceReserved="false" />
     <SwitchPreference
         android:checked="false"
-        android:key="@string/preference_timeremaining"
-        android:summary="@string/desc_time_remaining_summary"
-        android:title="@string/desc_time_remaining"
+        android:key="@string/preference_time_remaining"
+        android:summary="@string/preference_time_remaining_desc_summary"
+        android:title="@string/preference_time_remaining_desc"
         app:iconSpaceReserved="false" />
     <Preference
         android:key="@string/preference_notification_settings"
-        android:summary="@string/desc_open_notification_settings_summary"
-        android:title="@string/desc_open_notification_settings"
+        android:summary="@string/preference_notification_settings_desc_summary"
+        android:title="@string/preference_notification_settings_desc"
         app:iconSpaceReserved="false" />
 </PreferenceScreen>

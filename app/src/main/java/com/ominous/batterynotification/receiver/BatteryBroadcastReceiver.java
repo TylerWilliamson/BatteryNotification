@@ -43,10 +43,6 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
                     Log.v(TAG, "Updating Battery Notification in background");
                     NotificationUtils.updateBatteryNotification(context);
 
-                    if (context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE)
-                            .getBoolean(context.getString(R.string.preference_immediate), false)) {
-                        context.startService(new Intent(context, BatteryService.class));
-                    }
                     break;
                 case Intent.ACTION_MY_PACKAGE_REPLACED:
                 case Intent.ACTION_BOOT_COMPLETED:

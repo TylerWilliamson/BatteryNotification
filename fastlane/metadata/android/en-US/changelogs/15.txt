@@ -1,0 +1,2 @@
+* Bugfix: Illegal State Exception when starting the background service
+* Bugfix: Reported Amperage Inverted

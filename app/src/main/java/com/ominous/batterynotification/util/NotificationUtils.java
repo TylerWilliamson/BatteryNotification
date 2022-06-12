@@ -48,9 +48,11 @@ public class NotificationUtils {
     public static Notification makeBatteryNotification(Context context, Intent intent) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE);
 
-        int level = BatteryUtils.getBatteryLevel(intent);
-        String state = BatteryUtils.getState(context, intent);
-        String timeRemaining = sharedPreferences.getBoolean(context.getString(R.string.preference_timeremaining), false) ? BatteryUtils.getTimeRemaining(context, intent) : "";
+        String spacer = context.getString(R.string.notification_spacer);
+
+        int level = BatteryUtils.getLevel(intent);
+        int batteryIconRes = BatteryUtils.isCharging(intent) ? R.drawable.ic_battery_charging_full_white_24dp : R.drawable.ic_battery_full_white_24dp;
+        String timeRemaining = sharedPreferences.getBoolean(context.getString(R.string.preference_time_remaining), false) ? BatteryUtils.getTimeRemaining(context, intent) : "";
 
         Notification.Builder notificationBuilder;
 
@@ -63,24 +65,41 @@ public class NotificationUtils {
 
         notificationBuilder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(Intent.ACTION_POWER_USAGE_SUMMARY), FLAG_IMMUTABLE))
                 .setOngoing(true)
-                .setShowWhen(false)
-                .setContentTitle(
-                        context.getString(timeRemaining.isEmpty() ? R.string.formatted_title : R.string.formatted_title_time_remaining,
-                                level,
-                                BatteryUtils.getTemperature(context, intent, sharedPreferences.getBoolean(context.getString(R.string.preference_fahrenheit), false)),
-                                timeRemaining))
-                .setContentText(
-                        context.getString(Build.VERSION.SDK_INT >= 21 ? R.string.formatted_contenttext_amp : R.string.formatted_contenttext,
-                                BatteryUtils.getAmperage(context, intent),
-                                BatteryUtils.getVoltage(context, intent),
-                                BatteryUtils.getHealth(context, intent)));
+                .setShowWhen(false);
+
+        StringBuilder notificationTitleBuilder = new StringBuilder(context.getString(R.string.format_percent, level))
+                .append(spacer)
+                .append(BatteryUtils.getTemperature(context, intent, sharedPreferences.getBoolean(context.getString(R.string.preference_fahrenheit), false)));
+
+        if (!timeRemaining.isEmpty()) {
+            notificationTitleBuilder
+                    .append(spacer)
+                    .append(timeRemaining);
+        }
+
+        StringBuilder notificationContentBuilder = new StringBuilder();
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            notificationContentBuilder
+                    .append(BatteryUtils.getAmperage(context))
+                    .append(spacer);
+        }
+
+        notificationContentBuilder
+                .append(BatteryUtils.getVoltage(context, intent))
+                .append(spacer)
+                .append(BatteryUtils.getHealth(context, intent));
+
+        notificationBuilder
+                .setContentTitle(notificationTitleBuilder.toString())
+                .setContentText(notificationContentBuilder.toString());
 
         if (Build.VERSION.SDK_INT >= 21) {
             notificationBuilder
                     .setColor(blendColorWithYellow(context, ContextCompat.getColor(context, level > 50 ? R.color.green : R.color.red), 100 - 2 * Math.abs(level - 50)))
-                    .setSmallIcon(state.equals(context.getString(R.string.state_charging)) ? R.drawable.ic_battery_charging_full_white_24dp : R.drawable.ic_battery_full_white_24dp);
+                    .setSmallIcon(batteryIconRes);
         } else {
-            VectorDrawableCompat drawable = VectorDrawableCompat.create(context.getResources(), state.equals(context.getString(R.string.state_charging)) ? R.drawable.ic_battery_charging_full_white_24dp : R.drawable.ic_battery_full_white_24dp, null);
+            VectorDrawableCompat drawable = VectorDrawableCompat.create(context.getResources(), batteryIconRes, null);
 
             if (drawable != null) {
                 Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -133,7 +152,7 @@ public class NotificationUtils {
     private static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationChannel notificationChannel = new NotificationChannel(context.getString(R.string.app_name), context.getString(R.string.app_name), NotificationManager.IMPORTANCE_MIN);
-            notificationChannel.setDescription(context.getString(R.string.chanel_description));
+            notificationChannel.setDescription(context.getString(R.string.notification_channel_description));
             notificationChannel.enableLights(false);
             notificationChannel.enableVibration(false);
             notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_SECRET);

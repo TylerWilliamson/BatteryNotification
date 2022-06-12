@@ -105,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
             getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_filename));
             addPreferencesFromResource(R.xml.settings);
 
-            timeRemainingPreference = setUpSwitchPreference(getString(R.string.preference_timeremaining));
+            timeRemainingPreference = setUpSwitchPreference(getString(R.string.preference_time_remaining));
             SwitchPreference notificationPreference = setUpSwitchPreference(getString(R.string.preference_notification));
             SwitchPreference updateImmediatelyPreference = setUpSwitchPreference(getString(R.string.preference_immediate));
             Preference openNotificationSettings = setUpPreference(getString(R.string.preference_notification_settings));
@@ -168,7 +168,7 @@ public class SettingsActivity extends AppCompatActivity {
                     } else {
                         context.stopService(batteryServiceIntent);
                     }
-                } else if (preferenceKey.equals(getString(R.string.preference_timeremaining))) {
+                } else if (preferenceKey.equals(getString(R.string.preference_time_remaining))) {
                     if (enabled) {
                         obtainPermission();
                     }
@@ -222,7 +222,7 @@ public class SettingsActivity extends AppCompatActivity {
                         final int result;
                         final int messageRes;
 
-                        switch (executeSuCommand(getString(R.string.formatted_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))) {
+                        switch (executeSuCommand(getString(R.string.format_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))) {
                             case 0:
                                 boolean hasPermission = hasPermission(activity);
                                 result = hasPermission ? RESULT_SUCCESS : RESULT_FAIL_PERMISSION;
@@ -251,8 +251,8 @@ public class SettingsActivity extends AppCompatActivity {
 
                                 if (timeRemainingFailureDialog == null) {
                                     timeRemainingFailureDialog = new TextDialog(activity)
-                                            .setTitle(getString(R.string.dialog_timeremaining_title))
-                                            .setContent(getString(R.string.dialog_timeremaining_content))
+                                            .setTitle(getString(R.string.dialog_time_remaining_title))
+                                            .setContent(getString(R.string.dialog_time_remaining_content))
                                             .setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_button_tryagain), this::obtainPermission)
                                             .setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.dialog_adb_title), () -> adbInstructionsDialog.show())
                                             .setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.dialog_button_close), null);
@@ -263,7 +263,7 @@ public class SettingsActivity extends AppCompatActivity {
                                             .setTitle(getString(R.string.dialog_adb_title))
                                             .setContent(getString(R.string.dialog_adb_content) +
                                                     "\n\n" +
-                                                    getString(R.string.formatted_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))
+                                                    getString(R.string.format_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))
                                             .setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_button_tryagain), this::obtainPermission)
                                             .setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.dialog_button_close), null);
                                 }
