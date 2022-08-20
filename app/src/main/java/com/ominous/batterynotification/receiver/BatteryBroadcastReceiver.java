@@ -22,6 +22,7 @@ package com.ominous.batterynotification.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -52,7 +53,11 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
 
                     if (context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE)
                             .getBoolean(context.getString(R.string.preference_immediate), false)) {
-                        context.startService(new Intent(context, BatteryService.class));
+                        if (Build.VERSION.SDK_INT >= 26) {
+                            context.startForegroundService(new Intent(context, BatteryService.class));
+                        } else {
+                            context.startService(new Intent(context, BatteryService.class));
+                        }
                     }
                     break;
                 default:
@@ -62,6 +67,7 @@ public class BatteryBroadcastReceiver extends BroadcastReceiver {
     }
 
     private boolean isNotificationEnabled(Context context) {
-        return context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE).getBoolean(context.getString(R.string.preference_notification), false);
+        return context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE).getBoolean(context.getString(R.string.preference_notification), false) &&
+                NotificationUtils.canShowNotifications(context);
     }
 }

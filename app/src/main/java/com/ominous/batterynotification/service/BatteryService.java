@@ -61,6 +61,10 @@ public class BatteryService extends Service {
     }
 
     public void onDestroy() {
-        this.unregisterReceiver(bbr);
+        try {
+            this.unregisterReceiver(bbr);
+        } catch (IllegalArgumentException e) {
+            //
+        }
     }
 }

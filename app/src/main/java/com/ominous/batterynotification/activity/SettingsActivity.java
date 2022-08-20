@@ -19,6 +19,7 @@
 
 package com.ominous.batterynotification.activity;
 
+import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,6 +41,8 @@ import com.ominous.batterynotification.util.NotificationUtils;
 import java.io.DataOutputStream;
 import java.util.concurrent.Executors;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -77,8 +80,17 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
         private static final int RESULT_SUCCESS = 1, RESULT_FAIL_SU = 2, RESULT_FAIL_PERMISSION = 3, RESULT_FAIL_UNKNOWN = 4;
-        private SwitchPreference timeRemainingPreference;
+        private SwitchPreference timeRemainingPreference, notificationPreference;
         private TextDialog timeRemainingFailureDialog, adbInstructionsDialog, foregroundServiceDialog;
+
+        private final ActivityResultLauncher<String> requestNotificationPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), r -> {
+                    if (r) {
+                        startNotification(getContext());
+                    } else {
+                        notificationPreference.setChecked(false);
+                    }
+                });
 
         private SwitchPreference setUpSwitchPreference(String key) {
             SwitchPreference preference = findPreference(key);
@@ -106,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
             addPreferencesFromResource(R.xml.settings);
 
             timeRemainingPreference = setUpSwitchPreference(getString(R.string.preference_time_remaining));
-            SwitchPreference notificationPreference = setUpSwitchPreference(getString(R.string.preference_notification));
+            notificationPreference = setUpSwitchPreference(getString(R.string.preference_notification));
             SwitchPreference updateImmediatelyPreference = setUpSwitchPreference(getString(R.string.preference_immediate));
             Preference openNotificationSettings = setUpPreference(getString(R.string.preference_notification_settings));
             setUpSwitchPreference(getString(R.string.preference_fahrenheit));
@@ -120,13 +132,26 @@ public class SettingsActivity extends AppCompatActivity {
             Context context = getContext();
 
             if (context != null) {
-                if (notificationPreference.isChecked()) {
-                    NotificationUtils.startBatteryNotification(context);
+                if (NotificationUtils.canShowNotifications(getContext())) {
+                    if (notificationPreference.isChecked()) {
+                        NotificationUtils.startBatteryNotification(context);
+                    }
+                } else {
+                    notificationPreference.setChecked(false);
                 }
 
                 if (updateImmediatelyPreference.isChecked()) {
                     context.startService(new Intent(context, BatteryService.class));
                 }
+            }
+        }
+
+        private void startNotification(Context context) {
+            NotificationUtils.startBatteryNotification(context);
+
+            if (context.getSharedPreferences(getString(R.string.preference_filename), Context.MODE_PRIVATE)
+                    .getBoolean(getString(R.string.preference_immediate), false)) {
+                context.startService(new Intent(context, BatteryService.class));
             }
         }
 
@@ -139,15 +164,14 @@ public class SettingsActivity extends AppCompatActivity {
             if (context != null) {
                 if (preferenceKey.equals(getString(R.string.preference_notification))) {
                     //TODO disable the other preferences if disabled
-                    if (enabled) {
-                        NotificationUtils.startBatteryNotification(context);
-
-                        if (context.getSharedPreferences(getString(R.string.preference_filename), Context.MODE_PRIVATE)
-                                .getBoolean(getString(R.string.preference_immediate), false)) {
-                            context.startService(new Intent(context, BatteryService.class));
+                    if (NotificationUtils.canShowNotifications(getContext())) {
+                        if (enabled) {
+                            startNotification(context);
+                        } else {
+                            NotificationUtils.cancelBatteryNotification(context);
                         }
                     } else {
-                        NotificationUtils.cancelBatteryNotification(context);
+                        requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
                     }
                 } else if (preferenceKey.equals(getString(R.string.preference_immediate))) {
                     Intent batteryServiceIntent = new Intent(context, BatteryService.class);

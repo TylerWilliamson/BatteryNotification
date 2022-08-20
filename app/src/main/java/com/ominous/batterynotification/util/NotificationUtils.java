@@ -19,6 +19,7 @@
 
 package com.ominous.batterynotification.util;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -27,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -46,6 +48,14 @@ public class NotificationUtils {
     private static final IntentFilter batteryIntentFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 
     public static Notification makeBatteryNotification(Context context, Intent intent) {
+        NotificationManager notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
+
+        if (Build.VERSION.SDK_INT >= 26 &&
+                notificationManager != null &&
+                notificationManager.getNotificationChannel(context.getString(R.string.app_name)) == null) {
+            createNotificationChannel(context);
+        }
+
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE);
 
         String spacer = context.getString(R.string.notification_spacer);
@@ -94,6 +104,12 @@ public class NotificationUtils {
                 .setContentTitle(notificationTitleBuilder.toString())
                 .setContentText(notificationContentBuilder.toString());
 
+        if (Build.VERSION.SDK_INT >= 31 &&
+                context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE).getBoolean(context.getString(R.string.preference_immediate), false)) {
+            notificationBuilder
+                    .setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE);
+        }
+
         if (Build.VERSION.SDK_INT >= 21) {
             notificationBuilder
                     .setColor(blendColorWithYellow(context, ContextCompat.getColor(context, level > 50 ? R.color.green : R.color.red), 100 - 2 * Math.abs(level - 50)))
@@ -130,10 +146,6 @@ public class NotificationUtils {
         NotificationManager notificationManager = ContextCompat.getSystemService(context, NotificationManager.class);
 
         if (notificationManager != null) {
-            if (Build.VERSION.SDK_INT >= 26 && notificationManager.getNotificationChannel(context.getString(R.string.app_name)) == null) {
-                createNotificationChannel(context);
-            }
-
             notificationManager.notify(NOTIFICATION_ID, makeBatteryNotification(context, intent));
         }
     }
@@ -174,5 +186,10 @@ public class NotificationUtils {
                 ((Color.red(otherColor) * (100 - percent) / 100) + (Color.red(yellow) * percent / 100)),
                 ((Color.green(otherColor) * (100 - percent) / 100) + (Color.green(yellow) * percent / 100)),
                 ((Color.blue(otherColor) * (100 - percent) / 100) + (Color.blue(yellow) * percent / 100)));
+    }
+
+    public static boolean canShowNotifications(Context context) {
+        return Build.VERSION.SDK_INT < 33 ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
     }
 }

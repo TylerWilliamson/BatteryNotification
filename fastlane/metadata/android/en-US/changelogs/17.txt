@@ -1,0 +1,4 @@
+* Support for Android 13
+* Added monochrome app icon for Android 13
+* Fixed crash in Android 8.1+
+* Fixed background service crashes

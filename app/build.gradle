@@ -20,13 +20,13 @@
 apply plugin: "com.android.application"
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.ominous.batterynotification"
         minSdkVersion 17
-        targetSdkVersion 32
-        versionCode 15
-        versionName "1.4.4"
+        targetSdkVersion 33
+        versionCode 17
+        versionName "1.4.5"
     }
     buildTypes {
         debug {
@@ -52,8 +52,10 @@ android {
 }
 
 dependencies {
-    implementation "androidx.activity:activity:1.4.0"
+    implementation "androidx.activity:activity:1.5.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1" //Required for androidx.preference
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1" //Required for androidx.preference
     implementation "androidx.preference:preference:1.2.0"
     //We're going deeper
-    implementation "com.github.tiann:FreeReflection:9bc252d"
+    implementation "com.github.tiann:FreeReflection:3.1.0"
 }
