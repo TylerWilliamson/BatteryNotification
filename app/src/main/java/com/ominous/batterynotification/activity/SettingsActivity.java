@@ -211,13 +211,15 @@ public class SettingsActivity extends AppCompatActivity {
             Context context = getContext();
 
             if (context != null && Build.VERSION.SDK_INT > 21) {
-                Intent intent = new Intent("android.settings.APP_NOTIFICATION_SETTINGS");
+                Intent intent = new Intent();
 
                 if (Build.VERSION.SDK_INT > 26) {
-                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName())
+                    intent.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName())
                             .putExtra(Settings.EXTRA_CHANNEL_ID, getString(R.string.app_name));
                 } else {
-                    intent.putExtra("app_package", context.getPackageName())
+                    intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra("app_package", context.getPackageName())
                             .putExtra("app_uid", context.getApplicationInfo().uid);
                 }
 
