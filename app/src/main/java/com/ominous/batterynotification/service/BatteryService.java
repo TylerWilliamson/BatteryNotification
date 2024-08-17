@@ -1,20 +1,20 @@
 /*
- *     Copyright 2016 - 2022 Tyler Williamson
+ * Copyright 2016 - 2024 Tyler Williamson
  *
- *     This file is part of BatteryNotification.
+ * This file is part of BatteryNotification.
  *
- *     BatteryNotification is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * BatteryNotification is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     BatteryNotification is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * BatteryNotification is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.ominous.batterynotification.service;
@@ -29,7 +29,7 @@ import android.util.Log;
 
 import com.ominous.batterynotification.util.NotificationUtils;
 
-//Updates immediately, or after a min
+//Updates immediately, or after 1 minute
 public class BatteryService extends Service {
     public final static IntentFilter UPDATE_FILTER = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     private final static String TAG = "BatteryService";

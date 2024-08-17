@@ -1,20 +1,20 @@
 <!--
-  ~     Copyright 2016 - 2022 Tyler Williamson
+  ~ Copyright 2016 - 2024 Tyler Williamson
   ~
-  ~     This file is part of BatteryNotification.
+  ~ This file is part of BatteryNotification.
   ~
-  ~     BatteryNotification is free software: you can redistribute it and/or modify
-  ~     it under the terms of the GNU General Public License as published by
-  ~     the Free Software Foundation, either version 3 of the License, or
-  ~     (at your option) any later version.
+  ~ BatteryNotification is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
   ~
-  ~     BatteryNotification is distributed in the hope that it will be useful,
-  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~     GNU General Public License for more details.
+  ~ BatteryNotification is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
   ~
-  ~     You should have received a copy of the GNU General Public License
-  ~     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
 <resources>
@@ -30,22 +30,21 @@
     <string name="message_permission_failure">Failed to grant permission</string>
     <string name="message_root_failure">Failed to execute root command</string>
     <string name="message_starting">Starting Battery Notification&#8230;</string>
-    <string name="message_permission_granted">Permission Granted</string>
-    <string name="message_unknown_error">Unknown Error</string>
+    <string name="message_permission_granted">Permission granted</string>
+    <string name="message_unknown_error">Unknown error</string>
     <string name="message_received_strange_intent">Received strange intent: %1$s</string>
 
     <string name="preference_filename">Settings</string>
     <string name="preference_notification" translatable="false">NotificationEnabled</string>
-    <string name="preference_notification_desc">Enable the Notification</string>
+    <string name="preference_notification_desc">Enable Notification</string>
     <string name="preference_notification_desc_summary">Create a persistent notification</string>
     <string name="preference_fahrenheit" translatable="false">FahrenheitEnabled</string>
     <string name="preference_fahrenheit_desc">Use Fahrenheit</string>
     <string name="preference_immediate" translatable="false">UpdateImmediately</string>
-    <string name="preference_immediate_desc">Update the notification immediately</string>
+    <string name="preference_immediate_desc">Update Notification Immediately</string>
     <string name="preference_immediate_desc_summary">Requires a background service</string>
     <string name="preference_time_remaining" translatable="false">TimeRemainingEnabled</string>
     <string name="preference_time_remaining_desc">Show Time Remaining On Battery/Charging</string>
-    <string name="preference_time_remaining_desc_summary">For Rooted Devices On Android 5.0+</string>
     <string name="preference_notification_settings" translatable="false">key_open_notification_settings</string>
     <string name="preference_notification_settings_desc">Open Device Notification Settings</string>
     <string name="preference_notification_settings_desc_summary">For Devices On Android 5.0+</string>

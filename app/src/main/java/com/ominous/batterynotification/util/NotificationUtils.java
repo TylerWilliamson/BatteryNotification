@@ -1,20 +1,20 @@
 /*
- *     Copyright 2016 - 2022 Tyler Williamson
+ * Copyright 2016 - 2024 Tyler Williamson
  *
- *     This file is part of BatteryNotification.
+ * This file is part of BatteryNotification.
  *
- *     BatteryNotification is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * BatteryNotification is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     BatteryNotification is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * BatteryNotification is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.ominous.batterynotification.util;
@@ -57,25 +57,11 @@ public class NotificationUtils {
         }
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE);
-
         String spacer = context.getString(R.string.notification_spacer);
 
         int level = BatteryUtils.getLevel(intent);
         int batteryIconRes = BatteryUtils.isCharging(intent) ? R.drawable.ic_battery_charging_full_white_24dp : R.drawable.ic_battery_full_white_24dp;
         String timeRemaining = sharedPreferences.getBoolean(context.getString(R.string.preference_time_remaining), false) ? BatteryUtils.getTimeRemaining(context, intent) : "";
-
-        Notification.Builder notificationBuilder;
-
-        if (Build.VERSION.SDK_INT >= 26) {
-            notificationBuilder = new Notification.Builder(context, context.getString(R.string.app_name));
-        } else {
-            notificationBuilder = new Notification.Builder(context)
-                    .setPriority(Notification.PRIORITY_MIN);
-        }
-
-        notificationBuilder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(Intent.ACTION_POWER_USAGE_SUMMARY), FLAG_IMMUTABLE))
-                .setOngoing(true)
-                .setShowWhen(false);
 
         StringBuilder notificationTitleBuilder = new StringBuilder(context.getString(R.string.format_percent, level))
                 .append(spacer)
@@ -100,12 +86,24 @@ public class NotificationUtils {
                 .append(spacer)
                 .append(BatteryUtils.getHealth(context, intent));
 
+        Notification.Builder notificationBuilder;
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            notificationBuilder = new Notification.Builder(context, context.getString(R.string.app_name));
+        } else {
+            notificationBuilder = new Notification.Builder(context)
+                    .setPriority(Notification.PRIORITY_MIN);
+        }
+
         notificationBuilder
+                .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(Intent.ACTION_POWER_USAGE_SUMMARY), FLAG_IMMUTABLE))
+                .setOngoing(true)
+                .setShowWhen(false)
                 .setContentTitle(notificationTitleBuilder.toString())
                 .setContentText(notificationContentBuilder.toString());
 
         if (Build.VERSION.SDK_INT >= 31 &&
-                context.getSharedPreferences(context.getString(R.string.preference_filename), Context.MODE_PRIVATE).getBoolean(context.getString(R.string.preference_immediate), false)) {
+                sharedPreferences.getBoolean(context.getString(R.string.preference_immediate), false)) {
             notificationBuilder
                     .setForegroundServiceBehavior(Notification.FOREGROUND_SERVICE_IMMEDIATE);
         }

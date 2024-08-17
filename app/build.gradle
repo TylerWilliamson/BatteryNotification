@@ -1,32 +1,33 @@
 /*
- *     Copyright 2016 - 2022 Tyler Williamson
+ * Copyright 2016 - 2024 Tyler Williamson
  *
- *     This file is part of BatteryNotification.
+ * This file is part of BatteryNotification.
  *
- *     BatteryNotification is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * BatteryNotification is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     BatteryNotification is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * BatteryNotification is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 apply plugin: "com.android.application"
 
 android {
-    compileSdkVersion 33
+    namespace "com.ominous.batterynotification"
+    compileSdk 35
     defaultConfig {
         applicationId "com.ominous.batterynotification"
         minSdkVersion 17
-        targetSdkVersion 33
-        versionCode 17
-        versionName "1.4.5"
+        targetSdkVersion 35
+        versionCode 18
+        versionName "1.4.6"
     }
     buildTypes {
         debug {
@@ -34,6 +35,7 @@ android {
             versionNameSuffix "-DEBUG"
         }
         release {
+            shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
@@ -49,13 +51,21 @@ android {
             storeFile file('../debug.keystore')
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
-    implementation "androidx.activity:activity:1.5.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1" //Required for androidx.preference
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1" //Required for androidx.preference
-    implementation "androidx.preference:preference:1.2.0"
+    implementation "androidx.activity:activity:1.8.2" //Latest version that targets API version 17
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20") {
+        because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+    }
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20") {
+        because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+    }
+
+    implementation "androidx.preference:preference:1.2.1"
     //We're going deeper
-    implementation "com.github.tiann:FreeReflection:3.1.0"
+    implementation "com.github.tiann:FreeReflection:3.2.0"
 }

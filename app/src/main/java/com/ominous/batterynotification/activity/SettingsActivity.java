@@ -1,20 +1,20 @@
 /*
- *     Copyright 2016 - 2022 Tyler Williamson
+ * Copyright 2016 - 2024 Tyler Williamson
  *
- *     This file is part of BatteryNotification.
+ * This file is part of BatteryNotification.
  *
- *     BatteryNotification is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
+ * BatteryNotification is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     BatteryNotification is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ * BatteryNotification is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *     You should have received a copy of the GNU General Public License
- *     along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.ominous.batterynotification.activity;
@@ -79,14 +79,23 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
-        private static final int RESULT_SUCCESS = 1, RESULT_FAIL_SU = 2, RESULT_FAIL_PERMISSION = 3, RESULT_FAIL_UNKNOWN = 4;
-        private SwitchPreference timeRemainingPreference, notificationPreference;
-        private TextDialog timeRemainingFailureDialog, adbInstructionsDialog, foregroundServiceDialog;
+        private SwitchPreference timeRemainingPreference;
+        private SwitchPreference notificationPreference;
+        private SwitchPreference updateImmediatelyPreference;
+        private SwitchPreference fahrenheitPreference;
+
+        private TextDialog timeRemainingFailureDialog;
+        private TextDialog adbInstructionsDialog;
+        private TextDialog foregroundServiceDialog;
 
         private final ActivityResultLauncher<String> requestNotificationPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), r -> {
                     if (r) {
                         startNotification(getContext());
+
+                        updateImmediatelyPreference.setEnabled(true);
+                        fahrenheitPreference.setEnabled(true);
+                        timeRemainingPreference.setEnabled(true);
                     } else {
                         notificationPreference.setChecked(false);
                     }
@@ -117,16 +126,22 @@ public class SettingsActivity extends AppCompatActivity {
             getPreferenceManager().setSharedPreferencesName(getString(R.string.preference_filename));
             addPreferencesFromResource(R.xml.settings);
 
-            timeRemainingPreference = setUpSwitchPreference(getString(R.string.preference_time_remaining));
             notificationPreference = setUpSwitchPreference(getString(R.string.preference_notification));
-            SwitchPreference updateImmediatelyPreference = setUpSwitchPreference(getString(R.string.preference_immediate));
+            fahrenheitPreference = setUpSwitchPreference(getString(R.string.preference_fahrenheit));
+            updateImmediatelyPreference = setUpSwitchPreference(getString(R.string.preference_immediate));
+            timeRemainingPreference = setUpSwitchPreference(getString(R.string.preference_time_remaining));
             Preference openNotificationSettings = setUpPreference(getString(R.string.preference_notification_settings));
-            setUpSwitchPreference(getString(R.string.preference_fahrenheit));
 
             if (Build.VERSION.SDK_INT < 21) {
                 openNotificationSettings.setEnabled(false);
                 timeRemainingPreference.setEnabled(false);
                 timeRemainingPreference.setChecked(false);
+            }
+
+            if (!notificationPreference.isChecked()) {
+                updateImmediatelyPreference.setEnabled(false);
+                fahrenheitPreference.setEnabled(false);
+                timeRemainingPreference.setEnabled(false);
             }
 
             Context context = getContext();
@@ -163,15 +178,21 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (context != null) {
                 if (preferenceKey.equals(getString(R.string.preference_notification))) {
-                    //TODO disable the other preferences if disabled
-                    if (NotificationUtils.canShowNotifications(getContext())) {
-                        if (enabled) {
+                    if (enabled) {
+                        if (NotificationUtils.canShowNotifications(getContext())) {
                             startNotification(context);
+
+                            updateImmediatelyPreference.setEnabled(true);
+                            fahrenheitPreference.setEnabled(true);
+                            timeRemainingPreference.setEnabled(true);
                         } else {
-                            NotificationUtils.cancelBatteryNotification(context);
+                            requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
                         }
                     } else {
-                        requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                        NotificationUtils.cancelBatteryNotification(context);
+                        updateImmediatelyPreference.setEnabled(false);
+                        fahrenheitPreference.setEnabled(false);
+                        timeRemainingPreference.setEnabled(false);
                     }
                 } else if (preferenceKey.equals(getString(R.string.preference_immediate))) {
                     Intent batteryServiceIntent = new Intent(context, BatteryService.class);
@@ -207,6 +228,16 @@ public class SettingsActivity extends AppCompatActivity {
             return true;
         }
 
+        @Override
+        public boolean onPreferenceClick(@NonNull Preference preference) {
+            if (Build.VERSION.SDK_INT > 21
+                    && preference.getKey().equals(getString(R.string.preference_notification_settings))) {
+                openNotificationSettings();
+            }
+
+            return true;
+        }
+
         private void openNotificationSettings() {
             Context context = getContext();
 
@@ -225,16 +256,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         }
 
-        @Override
-        public boolean onPreferenceClick(@NonNull Preference preference) {
-            if (Build.VERSION.SDK_INT > 21
-                    && preference.getKey().equals(getString(R.string.preference_notification_settings))) {
-                openNotificationSettings();
-            }
-
-            return true;
-        }
-
         private void obtainPermission() {
             final FragmentActivity activity = getActivity();
 
@@ -243,30 +264,29 @@ public class SettingsActivity extends AppCompatActivity {
                     timeRemainingPreference.setChecked(true);
                 } else {
                     Executors.newCachedThreadPool().submit(() -> {
-                        final int result;
+                        final boolean successful;
                         final int messageRes;
 
                         switch (executeSuCommand(getString(R.string.format_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))) {
                             case 0:
-                                boolean hasPermission = hasPermission(activity);
-                                result = hasPermission ? RESULT_SUCCESS : RESULT_FAIL_PERMISSION;
-                                messageRes = hasPermission ? R.string.message_permission_granted : R.string.message_permission_failure;
+                                successful = hasPermission(activity);
+                                messageRes = successful ? R.string.message_permission_granted : R.string.message_permission_failure;
                                 break;
                             case 1:
-                                result = RESULT_FAIL_SU;
+                                successful = false;
                                 messageRes = R.string.message_root_failure;
                                 break;
                             case 255:
-                                result = RESULT_FAIL_PERMISSION;
+                                successful = false;
                                 messageRes = R.string.message_permission_failure;
                                 break;
                             default:
-                                result = RESULT_FAIL_UNKNOWN;
+                                successful = false;
                                 messageRes = R.string.message_unknown_error;
                         }
 
                         activity.runOnUiThread(() -> {
-                            if (result == RESULT_SUCCESS) {
+                            if (successful) {
                                 Log.v(TAG, getString(messageRes));
 
                                 timeRemainingPreference.setChecked(true);
