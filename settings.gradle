@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2024 Tyler Williamson
+ * Copyright 2016 - 2025 Tyler Williamson
  *
  * This file is part of BatteryNotification.
  *

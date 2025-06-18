@@ -17,8 +17,6 @@
   ~ along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<full-backup-content>
-    <include
-        domain="sharedpref"
-        path="Settings" />
-</full-backup-content>
+<resources>
+    <color name="background_primary">#FF212121</color>
+</resources>

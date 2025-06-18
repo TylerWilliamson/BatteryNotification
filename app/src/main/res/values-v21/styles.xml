@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright 2016 - 2025 Tyler Williamson
   ~
   ~ This file is part of BatteryNotification.
@@ -17,8 +18,13 @@
   ~ along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<full-backup-content>
-    <include
-        domain="sharedpref"
-        path="Settings" />
-</full-backup-content>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+    </style>
+</resources>

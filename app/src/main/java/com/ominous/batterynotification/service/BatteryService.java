@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2024 Tyler Williamson
+ * Copyright 2016 - 2025 Tyler Williamson
  *
  * This file is part of BatteryNotification.
  *
@@ -49,6 +49,8 @@ public class BatteryService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //TODO this throws ForegroundServiceStartNotAllowedException on some devices because of battery optimization
+
         this.startForeground(NotificationUtils.NOTIFICATION_ID,
                 NotificationUtils.makeBatteryNotification(this,
                         this.registerReceiver(bbr, UPDATE_FILTER)));

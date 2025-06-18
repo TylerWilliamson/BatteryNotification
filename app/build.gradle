@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2024 Tyler Williamson
+ * Copyright 2016 - 2025 Tyler Williamson
  *
  * This file is part of BatteryNotification.
  *
@@ -21,13 +21,13 @@ apply plugin: "com.android.application"
 
 android {
     namespace "com.ominous.batterynotification"
-    compileSdk 35
+    compileSdk 36
     defaultConfig {
         applicationId "com.ominous.batterynotification"
         minSdkVersion 17
-        targetSdkVersion 35
-        versionCode 18
-        versionName "1.4.6"
+        targetSdkVersion 36
+        versionCode 19
+        versionName "1.4.7"
     }
     buildTypes {
         debug {
@@ -42,8 +42,8 @@ android {
     }
     compileOptions {
         compileOptions {
-            targetCompatibility 1.8
-            sourceCompatibility 1.8
+            targetCompatibility 17
+            sourceCompatibility 17
         }
     }
     signingConfigs {
@@ -57,11 +57,14 @@ android {
 }
 
 dependencies {
+    //noinspection GradleDependency
     implementation "androidx.activity:activity:1.8.2" //Latest version that targets API version 17
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20") {
+
+    //Required for some dependencies
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.0") {
         because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
     }
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20") {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.1.0") {
         because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
     }
 

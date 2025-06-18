@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2024 Tyler Williamson
+ * Copyright 2016 - 2025 Tyler Williamson
  *
  * This file is part of BatteryNotification.
  *
@@ -70,22 +70,18 @@ class BatteryUtils {
     static String getHealth(Context context, Intent intent) {
         int health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1);
 
-        switch (health) {
-            case BatteryManager.BATTERY_HEALTH_COLD:
-                return context.getString(R.string.health_cold);
-            case BatteryManager.BATTERY_HEALTH_DEAD:
-                return context.getString(R.string.health_dead);
-            case BatteryManager.BATTERY_HEALTH_OVERHEAT:
-                return context.getString(R.string.health_overheating);
-            case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE:
-                return context.getString(R.string.health_overvoltage);
-            case BatteryManager.BATTERY_HEALTH_GOOD:
-                return context.getString(R.string.health_healthy);
+        return switch (health) {
+            case BatteryManager.BATTERY_HEALTH_COLD -> context.getString(R.string.health_cold);
+            case BatteryManager.BATTERY_HEALTH_DEAD -> context.getString(R.string.health_dead);
+            case BatteryManager.BATTERY_HEALTH_OVERHEAT ->
+                    context.getString(R.string.health_overheating);
+            case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE ->
+                    context.getString(R.string.health_overvoltage);
+            case BatteryManager.BATTERY_HEALTH_GOOD -> context.getString(R.string.health_healthy);
             //case BatteryManager.BATTERY_HEALTH_UNKNOWN:
             //case BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE:
-            default:
-                return context.getString(R.string.health_unknown);
-        }
+            default -> context.getString(R.string.health_unknown);
+        };
     }
 
     @NonNull

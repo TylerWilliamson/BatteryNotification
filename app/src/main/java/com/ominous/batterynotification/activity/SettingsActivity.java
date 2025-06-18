@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 - 2024 Tyler Williamson
+ * Copyright 2016 - 2025 Tyler Williamson
  *
  * This file is part of BatteryNotification.
  *
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with BatteryNotification.  If not, see <https://www.gnu.org/licenses/>.
- */
+ */        //todo only needed for api 21-23
 
 package com.ominous.batterynotification.activity;
 
@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import com.ominous.batterynotification.R;
 import com.ominous.batterynotification.dialog.TextDialog;
@@ -39,13 +40,19 @@ import com.ominous.batterynotification.service.BatteryService;
 import com.ominous.batterynotification.util.NotificationUtils;
 
 import java.io.DataOutputStream;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.SystemBarStyle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -57,12 +64,19 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        int colorPrimaryDark = ContextCompat.getColor(this, R.color.colorPrimaryDark);
+        SystemBarStyle barStyle = SystemBarStyle.dark(colorPrimaryDark);
+
+        EdgeToEdge.enable(this, barStyle, barStyle);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_settings);
 
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+            if (Build.VERSION.SDK_INT < 23) {
+                getWindow().setStatusBarColor(colorPrimaryDark);
+                getWindow().setNavigationBarColor(colorPrimaryDark);
+            }
 
             setTaskDescription(
                     Build.VERSION.SDK_INT >= 28 ?
@@ -76,6 +90,26 @@ public class SettingsActivity extends AppCompatActivity {
                                     ContextCompat.getColor(this, R.color.colorPrimary))
             );
         }
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+                findViewById(R.id.toolbar),
+                (v, windowInsetsCompat) -> {
+                    Insets insets = windowInsetsCompat.getInsets(
+                            WindowInsetsCompat.Type.statusBars() |
+                                    WindowInsetsCompat.Type.navigationBars());
+
+                    ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+
+                    mlp.setMargins(
+                            0,
+                            insets.top,
+                            0,
+                            insets.bottom);
+                    v.setLayoutParams(mlp);
+
+                    return windowInsetsCompat;
+                }
+        );
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -147,7 +181,7 @@ public class SettingsActivity extends AppCompatActivity {
             Context context = getContext();
 
             if (context != null) {
-                if (NotificationUtils.canShowNotifications(getContext())) {
+                if (NotificationUtils.canShowNotifications(context)) {
                     if (notificationPreference.isChecked()) {
                         NotificationUtils.startBatteryNotification(context);
                     }
@@ -263,60 +297,61 @@ public class SettingsActivity extends AppCompatActivity {
                 if (hasPermission(activity)) {
                     timeRemainingPreference.setChecked(true);
                 } else {
-                    Executors.newCachedThreadPool().submit(() -> {
-                        final boolean successful;
-                        final int messageRes;
-
-                        switch (executeSuCommand(getString(R.string.format_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))) {
-                            case 0:
-                                successful = hasPermission(activity);
-                                messageRes = successful ? R.string.message_permission_granted : R.string.message_permission_failure;
-                                break;
-                            case 1:
-                                successful = false;
-                                messageRes = R.string.message_root_failure;
-                                break;
-                            case 255:
-                                successful = false;
-                                messageRes = R.string.message_permission_failure;
-                                break;
-                            default:
-                                successful = false;
-                                messageRes = R.string.message_unknown_error;
-                        }
-
-                        activity.runOnUiThread(() -> {
-                            if (successful) {
-                                Log.v(TAG, getString(messageRes));
-
-                                timeRemainingPreference.setChecked(true);
-                            } else {
-                                Log.e(TAG, getString(messageRes));
-
-                                if (timeRemainingFailureDialog == null) {
-                                    timeRemainingFailureDialog = new TextDialog(activity)
-                                            .setTitle(getString(R.string.dialog_time_remaining_title))
-                                            .setContent(getString(R.string.dialog_time_remaining_content))
-                                            .setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_button_tryagain), this::obtainPermission)
-                                            .setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.dialog_adb_title), () -> adbInstructionsDialog.show())
-                                            .setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.dialog_button_close), null);
+                    try (ExecutorService pool = Executors.newCachedThreadPool()) {
+                        pool.submit(() -> {
+                            final boolean successful;
+                            final int messageRes = switch (executeSuCommand(getString(R.string.format_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))) {
+                                case 0 -> {
+                                    successful = hasPermission(activity);
+                                    yield successful ? R.string.message_permission_granted : R.string.message_permission_failure;
                                 }
-
-                                if (adbInstructionsDialog == null) {
-                                    adbInstructionsDialog = new TextDialog(activity)
-                                            .setTitle(getString(R.string.dialog_adb_title))
-                                            .setContent(getString(R.string.dialog_adb_content) +
-                                                    "\n\n" +
-                                                    getString(R.string.format_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))
-                                            .setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_button_tryagain), this::obtainPermission)
-                                            .setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.dialog_button_close), null);
+                                case 1 -> {
+                                    successful = false;
+                                    yield R.string.message_root_failure;
                                 }
+                                case 255 -> {
+                                    successful = false;
+                                    yield R.string.message_permission_failure;
+                                }
+                                default -> {
+                                    successful = false;
+                                    yield R.string.message_unknown_error;
+                                }
+                            };
 
-                                timeRemainingPreference.setChecked(false);
-                                timeRemainingFailureDialog.show();
-                            }
+                            activity.runOnUiThread(() -> {
+                                if (successful) {
+                                    Log.v(TAG, getString(messageRes));
+
+                                    timeRemainingPreference.setChecked(true);
+                                } else {
+                                    Log.e(TAG, getString(messageRes));
+
+                                    if (timeRemainingFailureDialog == null) {
+                                        timeRemainingFailureDialog = new TextDialog(activity)
+                                                .setTitle(getString(R.string.dialog_time_remaining_title))
+                                                .setContent(getString(R.string.dialog_time_remaining_content))
+                                                .setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_button_tryagain), this::obtainPermission)
+                                                .setButton(DialogInterface.BUTTON_NEUTRAL, getString(R.string.dialog_adb_title), () -> adbInstructionsDialog.show())
+                                                .setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.dialog_button_close), null);
+                                    }
+
+                                    if (adbInstructionsDialog == null) {
+                                        adbInstructionsDialog = new TextDialog(activity)
+                                                .setTitle(getString(R.string.dialog_adb_title))
+                                                .setContent(getString(R.string.dialog_adb_content) +
+                                                        "\n\n" +
+                                                        getString(R.string.format_command, activity.getPackageName(), PERMISSION_BATTERY_STATS))
+                                                .setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_button_tryagain), this::obtainPermission)
+                                                .setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.dialog_button_close), null);
+                                    }
+
+                                    timeRemainingPreference.setChecked(false);
+                                    timeRemainingFailureDialog.show();
+                                }
+                            });
                         });
-                    });
+                    }
                 }
             }
         }
